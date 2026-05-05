@@ -3,7 +3,6 @@ import Task from "../models/Task.js";
 import mongoose from "mongoose";
 
 export const chatWithAI = async (req, res) => {
-
   const { message, userId } = req.body;
 
   const client = new OpenAI({
@@ -12,7 +11,6 @@ export const chatWithAI = async (req, res) => {
   });
 
   try {
-
     if (!message) {
       return res.json({
         reply: "Hello 👋 I am your AI assistant. How can I help you?",
@@ -26,7 +24,6 @@ export const chatWithAI = async (req, res) => {
     if (userId && mongoose.Types.ObjectId.isValid(userId)) {
       tasks = await Task.find({ userId });
     }
-
     console.log("TASKS:", tasks);
 
     const aiResponse = await client.chat.completions.create({
@@ -46,13 +43,12 @@ Tasks: ${JSON.stringify(tasks)}
         },
       ],
       temperature: 0.3,
-      max_tokens: 120, 
+      max_tokens: 120,
     });
 
     res.json({
       reply: aiResponse.choices[0].message.content,
     });
-
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ error: err.message });
